@@ -4,9 +4,9 @@ import (
 	"advent/helpers"
 	"fmt"
 	"path/filepath"
+	"slices"
 	"strconv"
 	"unicode"
-    "regexp"
 )
 
 func RunPartOne() {
@@ -46,7 +46,7 @@ func CalibrationValues(input []string) int {
 
 func GetCalibrationValue(str string) int {
 	var first, last rune
-	var foundFirst = false
+    foundFirst := false
 
 	for _, char := range str {
 		if unicode.IsDigit(char) {
@@ -64,10 +64,10 @@ func GetCalibrationValue(str string) int {
 }
 
 func ProperCalibrationValues(input []string) int {
-	var sum = 0
+    sum := 0
 
 	for _, str := range input {
-		var calibrationValue = GetProperCalibrationValue(str)
+        calibrationValue := GetProperCalibrationValue(str)
 		sum += calibrationValue
 	}
 
@@ -75,22 +75,52 @@ func ProperCalibrationValues(input []string) int {
 }
 
 func GetProperCalibrationValue(str string) int {
-    digitRegex := regexp.MustCompile(`(?=(\d|one|two|three|four|five|six|seven|eight|nine|zero))`)
-    matches := digitRegex.FindAllString(str, -1)
+    digits := NumbersInString(str)
+    firstDigit := digits[0]
+    lastDigit := digits[len(digits)-1]
 
-    fmt.Printf("%v", matches)
-
-    firstDigit := GetDigit(matches[0])
-    lastDigit := GetDigit(matches[len(matches)-1])
-
-    value, err := strconv.Atoi(fmt.Sprint(firstDigit) + fmt.Sprint(lastDigit))
-
-    if (err != nil) {
-        return -1
-    }
-
-	return value 
+	return (firstDigit*10)+lastDigit
 }
+
+func NumbersInString(str string) []int {
+    numberWords := []string{"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "zero"}
+    wordStartIndex := 0
+    currentWord := ""
+    result := []int{}
+    stringLength := len(str)
+
+	for i := 0; i < stringLength; i++ {
+		if len(currentWord) == 0 {
+			wordStartIndex = i
+		}
+
+		currentWord += string(str[i])
+
+        // Check if this is an actual digit rather than a word
+		if len(currentWord) == 1 {
+			var digit, err = strconv.Atoi(currentWord)
+			if err == nil {
+				result = append(result, digit)
+				currentWord = ""
+				continue
+			}
+		}
+
+		if helpers.PrefixExistsInList(currentWord, numberWords) {
+			if slices.Contains(numberWords, currentWord) {
+				result = append(result, GetDigit(currentWord))
+				currentWord = ""
+				i = wordStartIndex
+			}
+		} else {
+            currentWord = ""
+			i = wordStartIndex
+		}
+	}
+
+    return result
+}
+
 
 func GetDigit(str string) int {
 	var values = map[string]int{

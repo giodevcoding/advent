@@ -3,6 +3,7 @@ package one
 import (
 	"fmt"
 	"testing"
+    "advent/helpers"
 )
 
 func TestCalibrationValues(t *testing.T) {
@@ -62,7 +63,7 @@ func TestProperCalibrationValues(t *testing.T) {
 	}
 }
 
-func TestGetProperCalibrationValues(t *testing.T) {
+func TestGetProperCalibrationValue(t *testing.T) {
 	var tests = []struct {
 		input    string
 		expected int
@@ -84,6 +85,34 @@ func TestGetProperCalibrationValues(t *testing.T) {
 		t.Run(testname, func(t *testing.T) {
 			result := GetProperCalibrationValue(test.input)
 			if result != test.expected {
+				t.Errorf("GetCalibrationValue(%s) = %d; expected %d", test.input, result, test.expected)
+			}
+		})
+	}
+}
+
+func TestNumbersInString(t *testing.T) {
+	var tests = []struct {
+		input    string
+		expected []int
+	}{
+		{"pqr3stu8vwx", []int{3, 8}},
+		{"a1b2c3d4e5f", []int{1, 2, 3, 4, 5}},
+		{"treb7uchet", []int{7}},
+		{"two1nine", []int{2, 1, 9}},
+		{"eightwothree", []int{8, 2, 3}},
+		{"abcone2threexyz", []int{1, 2, 3}},
+		{"xtwone3four", []int{2, 1, 3, 4}},
+		{"4nineeightseven2", []int{4, 9, 8, 7, 2}},
+		{"zoneight234", []int{1, 8, 2, 3, 4}},
+		{"7pqrstsixteen", []int{7, 6}},
+	}
+
+	for _, test := range tests {
+		testname := fmt.Sprintf("%s=%v", test.input, test.expected)
+		t.Run(testname, func(t *testing.T) {
+			result := NumbersInString(test.input)
+			if !helpers.IntSlicesEqual(result, test.expected) {
 				t.Errorf("GetCalibrationValue(%s) = %d; expected %d", test.input, result, test.expected)
 			}
 		})
