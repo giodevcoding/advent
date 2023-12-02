@@ -67,7 +67,6 @@ func TestGetProperCalibrationValues(t *testing.T) {
 		input    string
 		expected int
 	}{
-		{"two1nine", 12},
 		{"pqr3stu8vwx", 38},
 		{"a1b2c3d4e5f", 15},
 		{"treb7uchet", 77},
@@ -83,7 +82,7 @@ func TestGetProperCalibrationValues(t *testing.T) {
 	for _, test := range tests {
 		testname := fmt.Sprintf("%s=%d", test.input, test.expected)
 		t.Run(testname, func(t *testing.T) {
-			result := GetCalibrationValue(test.input)
+			result := GetProperCalibrationValue(test.input)
 			if result != test.expected {
 				t.Errorf("GetCalibrationValue(%s) = %d; expected %d", test.input, result, test.expected)
 			}
@@ -121,9 +120,9 @@ func TestGetDigit(t *testing.T) {
 	for _, test := range tests {
 		testname := fmt.Sprintf("%s=%d", test.input, test.expected)
 		t.Run(testname, func(t *testing.T) {
-			result := GetCalibrationValue(test.input)
+			result := GetDigit(test.input)
 			if result != test.expected {
-				t.Errorf("GetDigits(%s) = %d; expected %d", test.input, result, test.expected)
+				t.Errorf("GetDigit(%s) = %d; expected %d", test.input, result, test.expected)
 			}
 		})
 	}

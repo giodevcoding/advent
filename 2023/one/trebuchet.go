@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"unicode"
+    "regexp"
 )
 
 func RunPartOne() {
@@ -21,7 +22,15 @@ func RunPartOne() {
 }
 
 func RunPartTwo() {
+	var absPath, _ = filepath.Abs("./one/input.txt")
+	var lines, err = helpers.ReadFileLines(absPath)
 
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(ProperCalibrationValues(lines))
 }
 
 func CalibrationValues(input []string) int {
@@ -66,8 +75,21 @@ func ProperCalibrationValues(input []string) int {
 }
 
 func GetProperCalibrationValue(str string) int {
+    digitRegex := regexp.MustCompile(`(?=(\d|one|two|three|four|five|six|seven|eight|nine|zero))`)
+    matches := digitRegex.FindAllString(str, -1)
 
-	return 0
+    fmt.Printf("%v", matches)
+
+    firstDigit := GetDigit(matches[0])
+    lastDigit := GetDigit(matches[len(matches)-1])
+
+    value, err := strconv.Atoi(fmt.Sprint(firstDigit) + fmt.Sprint(lastDigit))
+
+    if (err != nil) {
+        return -1
+    }
+
+	return value 
 }
 
 func GetDigit(str string) int {
@@ -92,7 +114,6 @@ func GetDigit(str string) int {
 			return result
 		}
 	} else {
-        fmt.Println(result)
 		return result
 	}
 
