@@ -1,8 +1,10 @@
 package main
 
-import "advent/one"
+import (
+	"advent/two"
+)
 
 func main() {
-    one.RunPartOne()
-    one.RunPartTwo()
+    two.RunPartOne()
+    two.RunPartTwo()
 }
