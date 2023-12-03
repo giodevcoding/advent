@@ -1,10 +1,21 @@
 package main
 
 import (
-	"advent/two"
+	"advent/helpers"
+	"advent/three"
+	"fmt"
+	"path/filepath"
 )
 
 func main() {
-    two.RunPartOne()
-    two.RunPartTwo()
+	var absPath, _ = filepath.Abs("./three/input.txt")
+	var lines, err = helpers.ReadFileLines(absPath)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+    three.RunPartOne(lines)
+    //three.RunPartTwo(lines)
 }
