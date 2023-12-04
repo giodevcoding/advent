@@ -16,6 +16,6 @@ func main() {
 		return
 	}
 
-    three.RunPartOne(lines)
-    //three.RunPartTwo(lines)
+    //three.RunPartOne(lines)
+    three.RunPartTwo(lines)
 }
