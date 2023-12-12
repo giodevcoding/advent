@@ -2,13 +2,13 @@ package main
 
 import (
 	"advent/helpers"
-	"advent/five"
+	"advent/ten"
 	"fmt"
 	"path/filepath"
 )
 
 func main() {
-	var absPath, _ = filepath.Abs("./five/input.txt")
+	var absPath, _ = filepath.Abs("./ten/input.txt")
 	var lines, err = helpers.ReadFileLines(absPath)
 
 	if err != nil {
@@ -16,6 +16,6 @@ func main() {
 		return
 	}
 
-    //five.RunPartOne(lines)
-    five.RunPartTwo(lines)
+	//ten.RunPartOne(lines)
+	ten.RunPartTwo(lines)
 }
