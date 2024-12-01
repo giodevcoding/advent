@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	runner := new(AnswerRunner)
+	runner := AnswerRunner{}
 	runner.SetDay(1)
 	runner.TestAnswerFunc(day1.SimilarityScores, "31")
 	runner.RunAnswerFunc(day1.SimilarityScores)
