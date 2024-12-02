@@ -16,8 +16,8 @@ func ReconcileLists(input []string) string {
 		list2[i] = nums[1]
 	}
 
-	list1 = utils.MergeSortInt(list1)
-	list2 = utils.MergeSortInt(list2)
+	list1 = utils.MergeSort(list1, utils.NumberDesc)
+	list2 = utils.MergeSort(list2, utils.NumberDesc)
 
 	differencesSum := 0
 
