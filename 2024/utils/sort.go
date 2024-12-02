@@ -1,11 +1,11 @@
 package utils
 
 import (
-    "math"
-    "golang.org/x/exp/constraints"
+	"golang.org/x/exp/constraints"
+	"math"
 )
 
-type Comparator[T any] func(a, b T) bool
+type Comparator[T any] func(a, b T) int
 
 func MergeSort[T any](arr []T, comp Comparator[T]) []T {
 	if len(arr) <= 1 {
@@ -14,9 +14,9 @@ func MergeSort[T any](arr []T, comp Comparator[T]) []T {
 
 	mid := int(math.Floor(float64(len(arr)) / 2))
 
-    leftSlice := MergeSort(arr[0:mid], comp)
-    rightSlice := MergeSort(arr[(mid):len(arr)], comp)
-    return merge(leftSlice, rightSlice, comp)
+	leftSlice := MergeSort(arr[0:mid], comp)
+	rightSlice := MergeSort(arr[(mid):len(arr)], comp)
+	return merge(leftSlice, rightSlice, comp)
 }
 
 func merge[T any](leftSlice []T, rightSlice []T, comp Comparator[T]) []T {
@@ -27,7 +27,8 @@ func merge[T any](leftSlice []T, rightSlice []T, comp Comparator[T]) []T {
 
 	for leftIndex < leftSize && rightIndex < rightSize {
 		leftItem, rightItem := leftSlice[leftIndex], rightSlice[rightIndex]
-		if comp(leftItem, rightItem) {
+		sort := comp(leftItem, rightItem)
+		if sort <= 0 {
 			merged = append(merged, leftItem)
 			leftIndex++
 		} else {
@@ -49,10 +50,30 @@ func merge[T any](leftSlice []T, rightSlice []T, comp Comparator[T]) []T {
 	return merged
 }
 
-func NumberAsc[T interface{constraints.Integer | constraints.Float}](a, b T) bool {
-    return a > b
+type Number interface {
+	constraints.Integer | constraints.Float
 }
 
-func NumberDesc[T interface{constraints.Integer | constraints.Float}](a, b T) bool {
-    return a < b
+func NumberAsc[T Number](a, b T) int {
+	switch {
+	case a > b:
+		return 1
+	case a < b:
+		return -1
+	default:
+		return 0
+	}
+}
+
+func NumberDesc[T interface {
+	constraints.Integer | constraints.Float
+}](a, b T) int {
+	switch {
+	case a < b:
+		return 1
+	case a > b:
+		return -1
+	default:
+		return 0
+	}
 }
