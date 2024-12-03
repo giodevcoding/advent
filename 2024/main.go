@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	var day, answerFunc, testExpected = DAY_3, day3.CorruptedMemory, "161"
+	var day, answerFunc, testExpected = DAY_3, day3.CorruptedMemoryRegexEnabling, "48"
 
 	runner := AnswerRunner{}
 	runner.SetDay(day)

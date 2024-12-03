@@ -2,7 +2,9 @@ package day3
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
+	"strings"
 	"unicode"
 )
 
@@ -97,4 +99,59 @@ func CorruptedMemory(input []string) string {
 	}
 
 	return strconv.Itoa(total)
+}
+
+func CorruptedMemoryRegex(inputs []string) string {
+	total := 0
+    memory := ""
+    for _, memoryPart := range inputs {
+        memory += memoryPart
+    }
+
+    regex := regexp.MustCompile(`mul\(\d+,\d+\)`)
+    matches := regex.FindAllString(memory, -1)
+
+    for _, match := range matches {
+        total += extractMultiplication(match)
+    }
+
+    return strconv.Itoa(total)
+}
+
+func CorruptedMemoryRegexEnabling(inputs []string) string {
+	total := 0
+    memory := ""
+    enabled := true
+    for _, memoryPart := range inputs {
+        memory += memoryPart
+    }
+
+    regex := regexp.MustCompile(`mul\(\d+,\d+\)|do\(\)|don't\(\)`)
+    matches := regex.FindAllString(memory, -1)
+
+    for _, match := range matches {
+        switch match {
+        case "do()":
+            enabled = true
+        case "don't()":
+            enabled = false
+        default:
+            if enabled {
+                total += extractMultiplication(match)
+            }
+        }
+    }
+
+    return strconv.Itoa(total)
+}
+
+func extractMultiplication(mulStr string) int {
+    numbers := strings.Split(mulStr[4:len(mulStr)-1], ",")
+    a, aErr := strconv.Atoi(numbers[0])
+    b, bErr := strconv.Atoi(numbers[1])
+    if (aErr != nil || bErr != nil) {
+        fmt.Println(aErr, bErr)
+        return 0
+    }
+    return a*b
 }
