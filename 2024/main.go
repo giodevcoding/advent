@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	var day, answerFunc, testExpected = DAY_4, day4.XmasWordSearch, "18"
+	var day, answerFunc, testExpected = DAY_4, day4.XDashMasWordSearch, "9"
 
 	runner := AnswerRunner{}
 	runner.SetDay(day)
