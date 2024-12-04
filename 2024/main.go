@@ -1,12 +1,12 @@
 package main
 
 import (
-	"aoc2024/day3"
+	"aoc2024/day4"
 	. "aoc2024/utils"
 )
 
 func main() {
-	var day, answerFunc, testExpected = DAY_3, day3.CorruptedMemoryRegexEnabling, "48"
+	var day, answerFunc, testExpected = DAY_4, day4.XmasWordSearch, "18"
 
 	runner := AnswerRunner{}
 	runner.SetDay(day)
