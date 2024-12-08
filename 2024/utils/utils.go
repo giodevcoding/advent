@@ -5,6 +5,13 @@ import (
 	"strings"
 )
 
+func IntAbs (num int) int {
+    if num < 0 {
+        return num * -1
+    }
+    return num
+}
+
 func ForEach[T any](arr []T, forEachFunc func(T)) []T {
 	result := []T{}
 	for _, value := range arr {
