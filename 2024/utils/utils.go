@@ -5,6 +5,14 @@ import (
 	"strings"
 )
 
+func ForEach[T any](arr []T, forEachFunc func(T)) []T {
+	result := []T{}
+	for _, value := range arr {
+        forEachFunc(value)
+	}
+	return result
+}
+
 func Filter[T any](arr []T, filterFunc func(T) bool) []T {
 	result := []T{}
 	for _, value := range arr {
