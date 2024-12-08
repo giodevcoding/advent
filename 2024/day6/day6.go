@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"maps"
+	"math"
 	"os"
 	"slices"
 	"strconv"
@@ -61,14 +62,19 @@ func GuardPath(input []string) string {
 }
 
 func GuardPossibleObstructions(input []string) string {
-	possibleObstructions := make(map[Coordinate]bool)
 	positionsWalked := make(map[Coordinate][]Direction)
 	width, height := len(input[0]), len(input)
 	x, y, dir := getGuardStart(input)
-	positionsWalked[Coordinate{x, y}] = append(positionsWalked[Coordinate{x, y}], dir)
 	startX, startY := x, y
+	c := 0
+    positionsWalked[Coordinate{x, y}] = append(positionsWalked[Coordinate{x, y}], dir)
+
+	if _, obstructionFound := getGuardPossibleObstruction(startX, startY, x, y, dir, positionsWalked, input); obstructionFound {
+		c++
+	}
 
 	for {
+
 		nextX, nextY := x+dir.X, y+dir.Y
 		if nextX < 0 || nextX >= width || nextY < 0 || nextY >= height {
 			break
@@ -77,81 +83,128 @@ func GuardPossibleObstructions(input []string) string {
 		nextStep := rune(input[nextY][nextX])
 
 		for nextStep == '#' {
+			positionsWalked[Coordinate{x, y}] = append(positionsWalked[Coordinate{x, y}], dir)
 			dir = turnRight(dir)
+			positionsWalked[Coordinate{x, y}] = append(positionsWalked[Coordinate{x, y}], dir)
 			nextX, nextY = x+dir.X, y+dir.Y
 			if nextX < 0 || nextX >= width || nextY < 0 || nextY >= height {
 				break
 			}
 			nextStep = rune(input[nextY][nextX])
-		}
-
-		if x+dir.X >= 0 && x+dir.X < width && y+dir.Y >= 0 && y+dir.Y < height {
-			if input[y+dir.Y][x+dir.X] != '#' {
-				if (x+dir.X == startX && y+dir.Y == startY) == false {
-					if _, ok := positionsWalked[Coordinate{x + dir.X, y + dir.Y}]; !ok {
-						possibleObstruction := getGuardPossibleObstruction(x, y, dir, input, positionsWalked)
-						if possibleObstruction != nil {
-							possibleObstructions[*possibleObstruction] = true
-						}
-					}
-				}
-			}
 		}
 
 		x, y = nextX, nextY
 		positionsWalked[Coordinate{x, y}] = append(positionsWalked[Coordinate{x, y}], dir)
+
+		if _, obstructionFound := getGuardPossibleObstruction(startX, startY, x, y, dir, positionsWalked, input); obstructionFound {
+			c++
+		}
 	}
 
-	return strconv.Itoa(len(possibleObstructions))
+	return strconv.Itoa(c)
 }
 
-func getGuardPossibleObstruction(startX, startY int, startDir Direction, input []string, positionsWalked map[Coordinate][]Direction) *Coordinate {
+func getGuardPossibleObstruction(startX, startY, x, y int, dir Direction, positionsWalked map[Coordinate][]Direction, input []string) (Coordinate, bool) {
 	internalPositionsWalked := maps.Clone(positionsWalked)
 	width, height := len(input[0]), len(input)
-	x, y, dir := startX, startY, turnRight(startDir)
+	obsX, obsY := x+dir.X, y+dir.Y
 
+	// Don't try obstrcution that is outside of map
+	if obsX < 0 || obsX >= width || obsY < 0 || obsY >= height {
+		return Coordinate{}, false
+	}
+
+	// Don't try obstruction that is that on guard starting spot
+	if obsX == startX && obsY == startY {
+		return Coordinate{}, false
+	}
+
+	// If obstruction is in front, turn instead
+	if input[obsY][obsX] == '#' {
+		internalPositionsWalked[Coordinate{x, y}] = append(internalPositionsWalked[Coordinate{x, y}], dir)
+		dir = turnRight(dir)
+		internalPositionsWalked[Coordinate{x, y}] = append(internalPositionsWalked[Coordinate{x, y}], dir)
+		obsX, obsY = x+dir.X, y+dir.Y
+	}
+
+	// Don't try obstruction on previously traversed path
+	if dirs := positionsWalked[Coordinate{x + dir.X, y + dir.Y}]; dirs != nil {
+		return Coordinate{}, false
+	}
+
+	internalPositionsWalked[Coordinate{x, y}] = append(internalPositionsWalked[Coordinate{x, y}], dir)
+	dir = turnRight(dir)
+	internalPositionsWalked[Coordinate{x, y}] = append(internalPositionsWalked[Coordinate{x, y}], dir)
+outer:
 	for {
 		nextX, nextY := x+dir.X, y+dir.Y
 		if nextX < 0 || nextX >= width || nextY < 0 || nextY >= height {
 			break
 		}
+
 		nextStep := rune(input[nextY][nextX])
 
 		for nextStep == '#' {
+			internalPositionsWalked[Coordinate{x, y}] = append(internalPositionsWalked[Coordinate{x, y}], dir)
 			dir = turnRight(dir)
+			internalPositionsWalked[Coordinate{x, y}] = append(internalPositionsWalked[Coordinate{x, y}], dir)
 			nextX, nextY = x+dir.X, y+dir.Y
 			if nextX < 0 || nextX >= width || nextY < 0 || nextY >= height {
-				break
+				break outer
 			}
 			nextStep = rune(input[nextY][nextX])
 		}
 
-		if slices.Contains(internalPositionsWalked[Coordinate{nextX, nextY}], dir) {
-			fmt.Println("VALID OBSTRUCTION AT", startX+startDir.X, startY+startDir.Y)
-			return &Coordinate{startX + startDir.X, startY + startDir.Y}
-		}
-
 		x, y = nextX, nextY
-		internalPositionsWalked[Coordinate{x, y}] = append(internalPositionsWalked[Coordinate{x, y}], dir)
 
-		inputCopy := make([]string, len(input))
-		copy(inputCopy, input)
-
-		runes := []rune(inputCopy[startY+startDir.Y])
-		runes[startX+startDir.X] = '0'
-		inputCopy[startY+startDir.Y] = string(runes)
-
-		runes = []rune(inputCopy[y])
-		runes[x] = '*'
-		inputCopy[y] = string(runes)
-
-		/*for _, line := range inputCopy {
-			fmt.Println(line)
+		for _, posDir := range internalPositionsWalked[Coordinate{x, y}] {
+			if posDir.X == dir.X && posDir.Y == dir.Y {
+				fmt.Println("FOUND POSSIBLE OBSTRUCTION AT", obsX, obsY)
+				showObstruction(x, y, obsX, obsY, internalPositionsWalked, input)
+				return Coordinate{obsX, obsY}, true
+			}
 		}
-		buf.ReadBytes('\n')*/
+
+		internalPositionsWalked[Coordinate{x, y}] = append(internalPositionsWalked[Coordinate{x, y}], dir)
+		//showObstruction(x, y, obsX, obsY, internalPositionsWalked, input)
+	}
+	return Coordinate{}, false
+}
+
+func showObstruction(guardX, guardY, obsX, obsY int, positionsWalked map[Coordinate][]Direction, input []string) {
+	inputCopy := make([]string, len(input))
+	copy(inputCopy, input)
+
+	for coord, dirs := range positionsWalked {
+		runes := []rune(inputCopy[coord.Y])
+		combDir := Direction{}
+		for _, dir := range dirs {
+			combDir.X += int(math.Abs(float64(dir.X)))
+			combDir.Y += int(math.Abs(float64(dir.Y)))
+		}
+		if combDir.X == 0 && combDir.Y > 0 {
+			runes[coord.X] = '|'
+		} else if combDir.X > 0 && combDir.Y == 0 {
+			runes[coord.X] = '-'
+		} else {
+			runes[coord.X] = '+'
+		}
+		inputCopy[coord.Y] = string(runes)
 	}
 
-	return nil
+	runes := []rune(inputCopy[obsY])
+	runes[obsX] = 'O'
+	inputCopy[obsY] = string(runes)
+
+	runes = []rune(inputCopy[guardY])
+	runes[guardX] = '*'
+	inputCopy[guardY] = string(runes)
+
+	for _, line := range inputCopy {
+		fmt.Println(line)
+	}
+
+	//buf.ReadBytes('\n')
 }
 
 func getGuardStart(input []string) (x, y int, dir Direction) {
