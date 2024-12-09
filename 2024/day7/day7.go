@@ -6,27 +6,19 @@ import (
 	"strings"
 )
 
-type Operator string
-
-const (
-	add Operator = "+"
-	mul Operator = "*"
-	cat Operator = "||"
-)
-
 func BridgeRepairOperators(input []string) string {
 	total := 0
 	results, values := getCalibrations(input)
 	for i, expectedResult := range results {
 		found := false
-		if isValidCalibration(expectedResult, values[i], 0, 0, add, &found) {
+		if isValidCalibration(expectedResult, values[i], 0, 0, &found) {
 			total += expectedResult
 		}
 	}
 	return strconv.Itoa(total)
 }
 
-func isValidCalibration(expectedResult int, pieces []int, total int, index int, op Operator, alreadyFound *bool) bool {
+func isValidCalibration(expectedResult int, pieces []int, total int, index int, alreadyFound *bool) bool {
 	if *alreadyFound {
 		return *alreadyFound
 	}
@@ -39,19 +31,9 @@ func isValidCalibration(expectedResult int, pieces []int, total int, index int, 
 		return false
 	}
 
-	switch op {
-	case add:
-		total += pieces[index]
-	case mul:
-		total *= pieces[index]
-	case cat:
-		total = concatInts(total, pieces[index])
-	}
-
-	withAdd := isValidCalibration(expectedResult, pieces, total, index+1, add, alreadyFound)
-	withMul := isValidCalibration(expectedResult, pieces, total, index+1, mul, alreadyFound)
-	withCat := isValidCalibration(expectedResult, pieces, total, index+1, cat, alreadyFound)
-	return withAdd || withMul || withCat
+	return isValidCalibration(expectedResult, pieces, total+pieces[index], index+1, alreadyFound) ||
+		isValidCalibration(expectedResult, pieces, total*pieces[index], index+1, alreadyFound) ||
+		isValidCalibration(expectedResult, pieces, concatInts(total, pieces[index]), index+1, alreadyFound)
 }
 
 func getCalibrations(input []string) (results []int, values [][]int) {
@@ -60,10 +42,7 @@ func getCalibrations(input []string) (results []int, values [][]int) {
 		result, _ := strconv.Atoi(split[0])
 		results = append(results, result)
 
-		testValuesStr := utils.Filter(strings.Split(split[1], " "), func(str string) bool {
-			return len(str) > 0
-		})
-		testValues := utils.Map(testValuesStr, func(val string) int {
+		testValues := utils.Map(strings.Split(split[1], " "), func(val string) int {
 			num, _ := strconv.Atoi(val)
 			return num
 		})
