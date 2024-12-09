@@ -1,12 +1,12 @@
 package main
 
 import (
-	"aoc2024/day6"
+	"aoc2024/day7"
 	. "aoc2024/utils"
 )
 
 func main() {
-	var day, answerFunc, testExpected = DAY_6, day6.GuardPossibleObstructions, "6"
+	var day, answerFunc, testExpected = DAY_7, day7.BridgeRepairOperators, "11387"
 
 	runner := AnswerRunner{}
 	runner.SetDay(day)

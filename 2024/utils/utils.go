@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+type Slice[T any] []T
+
 func IntAbs (num int) int {
     if num < 0 {
         return num * -1
@@ -12,12 +14,10 @@ func IntAbs (num int) int {
     return num
 }
 
-func ForEach[T any](arr []T, forEachFunc func(T)) []T {
-	result := []T{}
+func ForEach[T any](arr []T, forEachFunc func(T)){
 	for _, value := range arr {
         forEachFunc(value)
 	}
-	return result
 }
 
 func Filter[T any](arr []T, filterFunc func(T) bool) []T {
@@ -29,6 +29,7 @@ func Filter[T any](arr []T, filterFunc func(T) bool) []T {
 	}
 	return result
 }
+
 
 func Map[T, U any](arr []T, mapFunc func(T) U) []U {
 	result := make([]U, len(arr))
