@@ -5,7 +5,25 @@ import (
 	"strings"
 )
 
-type Slice[T any] []T
+func SliceToSet[T comparable](slice []T) map[T]bool {
+    set := make(map[T]bool)
+    for _, item := range slice {
+        set[item] = true
+    }
+    return set
+}
+
+func SetToSlice[T comparable](set map[T]bool) []T {
+    slice := make([]T, 0)
+    for item := range set {
+        slice = append(slice, item)
+    }
+    return slice
+}
+
+func RemoveDuplicates[T comparable](slice []T) []T {
+    return SetToSlice(SliceToSet(slice))
+}
 
 func IntAbs (num int) int {
     if num < 0 {
