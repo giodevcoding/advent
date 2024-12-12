@@ -71,3 +71,7 @@ func StringToNumList(str string) []int {
 	})
 	return nums
 }
+
+func RuneToInt(r rune) int {
+    return int(r - '0')
+}
