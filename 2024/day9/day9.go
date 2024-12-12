@@ -10,13 +10,20 @@ import (
 var buf = bufio.NewReader(os.Stdin)
 
 func UpdateChecksum(input []string) string {
-	blocks := SpreadBlocks(input[0])
-    blockInts := RearrangeBlocks(blocks)
-    checksum := CalculateChecksum(blockInts)
+	blocks := spreadBlocks(input[0])
+    blocks = rearrangeBlocks(blocks)
+    checksum := calculateChecksum(blocks)
 	return strconv.Itoa(checksum)
 }
 
-func SpreadBlocks(blocks string) []string {
+func UpdateChecksumWholeFiles(input []string) string {
+	blocks := spreadBlocks(input[0])
+    blocks = rearrangeWholeBlocks(blocks)
+    checksum := calculateChecksum(blocks)
+	return strconv.Itoa(checksum)
+}
+
+func spreadBlocks(blocks string) []string {
 	result := make([]string, 0)
 	fileIndex := 0
 	for i, char := range blocks {
@@ -36,7 +43,7 @@ func SpreadBlocks(blocks string) []string {
     return result
 }
 
-func RearrangeBlocks(blocks []string) []int {
+func rearrangeBlocks(blocks []string) []string {
     for i, fileId := range blocks {
         if fileId != "." {
             continue
@@ -59,16 +66,61 @@ func RearrangeBlocks(blocks []string) []int {
     blocks = utils.Filter(blocks, func(s string) bool {
         return s != "."
     })
-    blockInts := utils.Map(blocks, func(s string) int {
-        num, _ := strconv.Atoi(s)
-        return num
-    })
-    return blockInts
+    return blocks
 }
 
-func CalculateChecksum(blockInts []int) (total int) {
-    for i, fileId := range blockInts {
-        total += i * fileId
+func rearrangeWholeBlocks(blocks []string) []string {
+    for i := len(blocks)-1; i >= 0; i-- {
+        if blocks[i] == "." {
+            continue
+        }
+        startIndex, fileBlocksLength := getFileIdBlocks(i, blocks)
+        i = startIndex
+
+        spaceCount := 0
+        for j := 0; j < len(blocks); j++ {
+            if blocks[j] != "." {
+                spaceCount = 0
+                continue
+            }
+
+            if j >= i {
+                break
+            }
+            
+            spaceCount++
+            if spaceCount == fileBlocksLength {
+                spaceStartIndex := (j - spaceCount) + 1
+                for k := 0; k < fileBlocksLength; k++ {
+                    blocks[startIndex+k], blocks[spaceStartIndex+k] = blocks[spaceStartIndex+k], blocks[startIndex+k]
+                }
+                break
+            }
+        }
+    }
+    return blocks
+}
+
+func getFileIdBlocks(endIndex int, blocks []string) (startIndex, length int) {
+    currentFileId := blocks[endIndex]
+    i := endIndex
+    for i >= 0 {
+        if blocks[i] != currentFileId {
+            break
+        }
+        startIndex = i
+        i--
+    }
+    length = (endIndex - startIndex)+1
+
+    return
+}
+
+
+func calculateChecksum(blocks []string) (total int) {
+    for i, fileId := range blocks {
+        fileIdInt, _ := strconv.Atoi(fileId)
+        total += i * fileIdInt
     } 
     return
 }

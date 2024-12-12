@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	var day, answerFunc, testExpected = DAY_9, day9.UpdateChecksum, "1928"
+	var day, answerFunc, testExpected = DAY_9, day9.UpdateChecksumWholeFiles, "2858"
 
 	runner := AnswerRunner{}
 	runner.SetDay(day)
