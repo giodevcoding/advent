@@ -1,12 +1,12 @@
 package main
 
 import (
-	"aoc2024/day11"
+	"aoc2024/day12"
 	. "aoc2024/utils"
 )
 
 func main() {
-	var day, answerFunc, testExpected = DAY_11, day11.MagicStonesBlinkingFast, "65601038650482"
+	var day, answerFunc, testExpected = DAY_12, day12.CalculateFenceCost, "1206"
 
 	runner := AnswerRunner{}
 	runner.SetDay(day)
