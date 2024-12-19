@@ -1,15 +1,15 @@
 package main
 
 import (
-	"aoc2024/day13"
+	"aoc2024/day15"
 	. "aoc2024/utils"
 )
 
 func main() {
-    var day, answerFunc, testExpected = DAY_13, day13.ClawMachineMatrixMath, "875318608908"
+    day, answerFunc, _ := DAY_15, day15.WarehouseWideRobot, "9021"
 
 	runner := AnswerRunner{}
 	runner.SetDay(day)
-	runner.TestAnswerFunc(answerFunc, testExpected)
+	//runner.TestAnswerFunc(answerFunc, testExpected)
 	runner.RunAnswerFunc(answerFunc)
 }
