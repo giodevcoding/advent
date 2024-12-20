@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -20,8 +21,30 @@ func (v Vec2) Add(v2 Vec2) Vec2 {
 	return v
 }
 
+func (v Vec2) AddInt(x int, y int) Vec2 {
+	v.X += x
+	v.Y += y
+	return v
+}
+
+func (v Vec2) Sub(v2 Vec2) Vec2 {
+	v.X -= v2.X
+	v.Y -= v2.Y
+	return v
+}
+
+func (v Vec2) SubInt(x int, y int) Vec2 {
+	v.X -= x
+	v.Y -= y
+	return v
+}
+
 func (v Vec2) Equals(v2 Vec2) bool {
 	return v.X == v2.X && v.Y == v2.Y
+}
+
+func (v Vec2) EqualsInt(x int, y int) bool {
+	return v.X == x && v.Y == y
 }
 
 func SliceToSet[T comparable](slice []T) map[T]bool {
@@ -88,6 +111,14 @@ func StringToNumList(str string) []int {
 		return num
 	})
 	return nums
+}
+
+func RemoveFromSlice[T comparable](slice []T, element T) []T {
+    index := slices.Index(slice, element)
+    if index != -1 {
+        return append(slice[:index], slice[index+1:]...)
+    }
+    return slice
 }
 
 func RuneToInt(r rune) int {
