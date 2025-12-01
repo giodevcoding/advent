@@ -18,7 +18,7 @@ void main() {
   test(
     'NorthpoleEntrancePasswordDecoder properly decodes password from real input with old method',
     () {
-      var actualInstructions = AdventInputReader("one_a.txt").readIntoLines();
+      var actualInstructions = AdventInputReader("one.txt").readIntoLines();
       var decoder = NorthPoleEntrancePasswordDecoder(startingPoint: 50);
 
       var result = decoder.decode(actualInstructions);

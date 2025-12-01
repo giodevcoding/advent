@@ -1,7 +1,7 @@
 import 'package:advent/src/file_utils.dart';
 
 String dayOne() {
-  var fileReader = AdventInputReader("one_a.txt");
+  var fileReader = AdventInputReader("one.txt");
   var instructions = fileReader.readIntoLines();
   var decoder = NorthPoleEntrancePasswordDecoder(startingPoint: 50);
   var decodedPassword = decoder.decode(instructions);
