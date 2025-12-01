@@ -1,0 +1,3 @@
+String dayOne() {
+  return "one";
+}
