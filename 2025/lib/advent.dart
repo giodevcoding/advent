@@ -1,8 +1,8 @@
+import 'package:advent/src/day.dart';
 import 'package:advent/src/one.dart';
+import 'package:advent/src/two.dart';
 
 String getResultForDay(int day) {
-  return switch(day) {
-    1 => dayOne(),
-    _ => throw ArgumentError("Day does not have an existing method"),
-  };
+  List<DayRunner> runners = [DayOneRunner(), DayTwoRunner()];
+  return runners.firstWhere((r) => r.day() == day).run();
 }

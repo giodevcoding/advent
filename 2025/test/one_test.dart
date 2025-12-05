@@ -1,3 +1,4 @@
+import 'package:advent/src/debug_utils.dart';
 import 'package:advent/src/file_utils.dart';
 import 'package:advent/src/one.dart';
 import 'package:test/test.dart';
@@ -11,7 +12,7 @@ void main() {
 
       var result = decoder.decode(sampleInstructions);
 
-      expect(result, 4);
+      expect(result, 3);
     },
   );
 
@@ -33,13 +34,19 @@ void main() {
       var sampleInstructions = getSampleInput();
       var decoder = NorthPoleEntrancePasswordDecoder(startingPoint: 50);
 
-      var result = decoder.decode(sampleInstructions);
+      var result = decoder.decodeSpecial(sampleInstructions);
+      var result2 = decoder.decodeSpecial(["L40", "L510"]);
 
-      expect(result, 7);
+      expect(result, 6);
+      expect(result2, 6);
     },
   );
+
+  tearDown(() {
+    Debugger.disable();
+  });
 }
 
 List<String> getSampleInput() {
-  return ["L68", "L30", "R48", "L5", "R60", "L55", "L1", "L99", "R14", "L82", "L32"];
+  return ["L68", "L30", "R48", "L5", "R60", "L55", "L1", "L99", "R14", "L82"];
 }

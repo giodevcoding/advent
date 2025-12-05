@@ -9,4 +9,8 @@ class AdventInputReader {
   List<String> readIntoLines() {
     return File(filePath + filename).readAsLinesSync();
   }
+
+  String read() {
+    return File(filePath + filename).readAsStringSync();
+  }
 }
