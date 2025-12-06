@@ -1,4 +1,4 @@
-import 'package:advent/src/day.dart';
+import 'package:advent/day.dart';
 import 'package:advent/src/debug_utils.dart';
 import 'package:advent/src/file_utils.dart';
 import 'package:advent/src/math_utils.dart';
@@ -6,9 +6,6 @@ import 'package:advent/src/string_utils.dart';
 
 @Day(2)
 class DayTwoRunner implements DayRunner {
-  @override
-  int day() => 2;
-
   @override
   String run() {
     var fileReader = AdventInputReader("two.txt");

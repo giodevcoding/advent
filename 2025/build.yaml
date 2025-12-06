@@ -1,0 +1,17 @@
+targets:
+  $default:
+    builders:
+      advent|day_registry:
+        enabled: true
+
+builders:
+  day_registry:
+    import: "package:advent/builder.dart"
+    builder_factories: 
+      - dayRegistryBuilder
+    build_extensions: 
+      "$package$": 
+        - lib/day_registry.g.dart
+
+    auto_apply: root_package
+    build_to: source

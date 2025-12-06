@@ -4,6 +4,5 @@ class Day {
 }
 
 abstract interface class DayRunner {
-  int day();
   String run();
 }

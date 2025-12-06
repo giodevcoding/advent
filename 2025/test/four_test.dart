@@ -29,7 +29,6 @@ void main() {
   });
 
   test('ForkliftOptimizer.getTotalRemovableRollCount returns correct number', () {
-    Debugger.enable();
     var result = forkliftOptimizer.getTotalRemovableRollCount(testInput);
 
     expect(result, 43);

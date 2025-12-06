@@ -1,14 +1,11 @@
 import 'dart:math';
 
-import 'package:advent/src/day.dart';
+import 'package:advent/day.dart';
 import 'package:advent/src/file_utils.dart';
 import 'package:advent/src/debug_utils.dart';
 
 @Day(1)
 class DayOneRunner implements DayRunner {
-  @override
-  int day() => 1;
-
   @override
   String run() {
     var fileReader = AdventInputReader("one.txt");
