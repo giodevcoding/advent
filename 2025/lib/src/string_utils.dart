@@ -5,3 +5,7 @@ List<String> chunk(String str, int chunkSize) {
   }
   return result;
 }
+
+String replaceCharAt(String str, int index, String newChar) {
+  return str.substring(0, index) + newChar + str.substring(index + 1);
+}
