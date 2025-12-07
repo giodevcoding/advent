@@ -39,7 +39,6 @@ void main() {
   test(
     'FreshnessChecker.getTotalNumberofPossibleFreshIngredients returns correct number',
     () {
-      Debugger.enable();
       var result = freshnessChecker.getTotalNumberofPossibleFreshIngredients(testInput);
 
       expect(result, 14);
