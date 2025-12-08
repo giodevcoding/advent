@@ -1,6 +1,7 @@
 import 'package:advent/src/five.dart';
 import 'package:advent/src/four.dart';
 import 'package:advent/src/one.dart';
+import 'package:advent/src/seven.dart';
 import 'package:advent/src/six.dart';
 import 'package:advent/src/three.dart';
 import 'package:advent/src/two.dart';
@@ -13,4 +14,5 @@ final Map<int, List<DayRunner>> dayRunners = <int, List<DayRunner>>{
   4: <DayRunner>[DayFourRunner()],
   5: <DayRunner>[DayFiveRunner()],
   6: <DayRunner>[DaySixRunner()],
+  7: <DayRunner>[DaySevenRunner()],
 };

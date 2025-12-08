@@ -12,7 +12,9 @@ class DaySixRunner implements DayRunner {
     var homeworkInput = inputReader.readIntoLines();
     var cephalopodMathSolver = CephalopodMathSolver();
     var result = cephalopodMathSolver.solve(homeworkInput);
-    return "\nTotal Answer: $result";
+    var resultRTL = cephalopodMathSolver.solve(homeworkInput, rtl: true);
+    return "\nTotal Answer: $result"
+        "\nTotal Answer RTL: $resultRTL";
   }
 }
 
@@ -51,10 +53,35 @@ class CephalopodMathSolver {
   }
 
   List<MathProblem> parseInputRTL(List<String> homeworkInput) {
-    // TODO: Parse Input RTL
-    // Use operator locations as how to identify string block start and end
-    // then parse strings before any int conversion, to maintain horizontal alignment
-    return [];
+    var mathProblems = <MathProblem>[];
+    var currentNumberSet = <String>[];
+    horizontal:
+    for (var x = homeworkInput[0].length - 1; x >= 0; x--) {
+      var currentNumberStr = "";
+      for (var y = 0; y < homeworkInput.length; y++) {
+        var char = homeworkInput[y][x];
+
+        switch (char) {
+          case "*" || "+":
+            currentNumberSet.add(currentNumberStr);
+            var parsedNumberSet = currentNumberSet.map(int.parse).toList();
+            var parsedOperator = MathOperator.fromString(char);
+            mathProblems.add(MathProblem(parsedOperator, parsedNumberSet));
+            Debugger.log(
+              "Parsed Math Problem: Operator: $parsedOperator, Numbers: $parsedNumberSet",
+            );
+            Debugger.waitForInput();
+            currentNumberSet.clear();
+            continue horizontal;
+          case final str when int.tryParse(str) != null:
+            currentNumberStr += str;
+        }
+      }
+      if (currentNumberStr.isNotEmpty) {
+        currentNumberSet.add(currentNumberStr);
+      }
+    }
+    return mathProblems;
   }
 }
 
