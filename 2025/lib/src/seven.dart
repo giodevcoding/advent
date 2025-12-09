@@ -9,7 +9,9 @@ class DaySevenRunner implements DayRunner {
     var inputReader = AdventInputReader("seven.txt");
     var diagram = inputReader.readIntoLines();
     var tracker = TachyonBeamTracker(diagram);
-    return "\nSplitter Count: ${tracker.splitCount}";
+    var timelineCount = tracker.getTimelineCount();
+    return "\nSplitter Count: ${tracker.splitCount}"
+        "\nTimeline Count: $timelineCount";
   }
 }
 
@@ -27,6 +29,35 @@ class TachyonBeamTracker {
   }
 
   int get splitCount => beamGraph.splitterNodes.length;
+
+  int getTimelineCount() {
+    var firstSplitter = beamGraph.getLeftNode(beamGraph.startNode!);
+    var memo = <String, int>{};
+
+    int getTimelines(BeamNode? node, Direction incomingDirection) {
+      if (node == null) {
+        return 1;
+      }
+
+      var id = _getNodeWithDirectionId(node, incomingDirection);
+
+      if (memo.containsKey(id)) {
+        Debugger.log("MEMO $id");
+        return memo[id]!;
+      }
+
+      var value =
+          getTimelines(beamGraph.getLeftNode(node), Direction.left) +
+          getTimelines(beamGraph.getRightNode(node), Direction.right);
+      memo[id] = value;
+      return value;
+    }
+
+    return getTimelines(firstSplitter, Direction.left);
+  }
+
+  String _getNodeWithDirectionId(BeamNode node, Direction dir) =>
+      "${node.getId()}${dir.name}";
 
   StartNode findStartNode() {
     for (int y = 0; y < beamDiagram.length; y++) {
@@ -75,27 +106,29 @@ class TachyonBeamTracker {
 }
 
 class BeamGraph {
-  final Map<String, BeamNode> _nodes = {};
+  final Map<String, BeamNode> nodes = {};
 
   void addNode(BeamNode node) {
     var id = node.getId();
-    if (_nodes.containsKey(id)) {
+    if (nodes.containsKey(id)) {
       throw StateError("Node with ID $id already exists in graph!");
     }
-    _nodes[id] = node;
+    nodes[id] = node;
   }
 
-  bool hasNode(BeamNode node) => _nodes.containsKey(node.getId());
+  bool hasNode(BeamNode node) => nodes.containsKey(node.getId());
 
-  Map<String, BeamNode> get nodes => _nodes;
+  BeamNode? get startNode => nodes['start'];
 
-  BeamNode? get startNode => _nodes['start'];
+  BeamNode? getLeftNode(BeamNode node) => nodes[node.leftNodeId];
+
+  BeamNode? getRightNode(BeamNode node) => nodes[node.rightNodeId];
 
   Map<String, BeamNode> get splitterNodes =>
-      Map<String, BeamNode>.from(_nodes)
+      Map<String, BeamNode>.from(nodes)
         ..removeWhere((key, _) => key == "start");
 
-  int get size => _nodes.length;
+  int get size => nodes.length;
 }
 
 abstract class BeamNode {
@@ -157,3 +190,5 @@ class SplitterNode extends BeamNode {
     return "x${x}y$y";
   }
 }
+
+enum Direction { left, right }

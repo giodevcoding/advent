@@ -26,11 +26,18 @@ void main() {
     ];
   });
 
-  test('TachyonBeamTracker.getSplitCount returns correct number', () {
-    Debugger.enable();
+  test('TachyonBeamTracker.splitCount returns correct number', () {
     tachyonBeamTracker = TachyonBeamTracker(testInput);
 
     expect(tachyonBeamTracker.splitCount, 21);
+  });
+
+  test('TachyonBeamTracker.pathCount returns correct number', () {
+    Debugger.enable();
+    tachyonBeamTracker = TachyonBeamTracker(testInput);
+    var pathCount = tachyonBeamTracker.getTimelineCount();
+
+    expect(pathCount, 40);
   });
 
   tearDown(Debugger.disable);
