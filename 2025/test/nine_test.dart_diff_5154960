@@ -1,0 +1,32 @@
+import 'package:advent/src/debug_utils.dart';
+import 'package:advent/src/nine.dart';
+import 'package:test/test.dart';
+
+void main() {
+  late List<String> testInput;
+
+  setUp(() {
+    testInput = [
+      // TODO: Add test input
+    ];
+  });
+
+  test('Day 9 part 1', () {
+    Debugger.enable();
+
+    // TODO: Implement test
+
+    expect(true, true);
+  });
+
+  test('Day 9 part 2', () {
+    Debugger.enable();
+
+    // TODO: Implement test
+
+    expect(true, true);
+  });
+
+  tearDown(Debugger.disable);
+}
+
