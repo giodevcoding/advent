@@ -25,6 +25,5 @@ List<int> divisors(int x) {
   return [...small, ...large.reversed];
 }
 
-const int maxInteger =  0x7FFFFFFFFFFFFFFF;
-const int minInteger = -0x8000000000000000;
-
+const int maxInt =  0x7FFFFFFFFFFFFFFF;
+const int minInt = -0x8000000000000000;

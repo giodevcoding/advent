@@ -56,16 +56,15 @@ class RedTheaterTileAnalyzer extends AbstractTheaterTileAnalyzer {
 class RedGreenTheaterTileAnalyzer extends AbstractTheaterTileAnalyzer {
   @override
   int getLargestRectangle(List<String> input) {
+    Debugger.enable();
     var redTiles = getRedTiles(input);
     var rectangles = _getRectangles(redTiles);
     var verticalEdges = _getVerticalEdges(redTiles);
     var horizontalRanges = _getHorizontalRanges(verticalEdges);
 
-    horizontalRanges.forEach(
-      (y, ranges) => Debugger.log("y: $y, ranges: $ranges"),
-    );
-
-    for (var rect in rectangles) {
+    for (var i = 0; i < rectangles.length; i++) {
+      var rect = rectangles[i];
+      Debugger.log("Checking rectangle $i of ${rectangles.length}");
       if (_isRectangleValid(rect, verticalEdges, horizontalRanges)) {
         return rect.area;
       }
@@ -82,7 +81,7 @@ class RedGreenTheaterTileAnalyzer extends AbstractTheaterTileAnalyzer {
       }
     }
 
-    return rectangles.sorted((r1, r2) => r2.area.compareTo(r2.area)).toList();
+    return rectangles.sorted((r1, r2) => r2.area.compareTo(r1.area)).toList();
   }
 
   bool _isRectangleValid(
@@ -91,7 +90,8 @@ class RedGreenTheaterTileAnalyzer extends AbstractTheaterTileAnalyzer {
     Map<int, List<HorizontalRange>> horizontalRanges,
   ) {
     for (var y = rectangle.minY; y <= rectangle.maxY; y++) {
-      for (var x = rectangle.minX; x <= rectangle.maxX; x++) {
+      var xIncrement = y == rectangle.minY || y == rectangle.maxY ? 1 : rectangle.maxX - rectangle.minX;
+      for (var x = rectangle.minX; x <= rectangle.maxX; x += xIncrement) {
         var inRange = false;
         for (var range in horizontalRanges[y]!) {
           if (x >= range.minX && x <= range.maxX) {
@@ -154,8 +154,20 @@ class RedGreenTheaterTileAnalyzer extends AbstractTheaterTileAnalyzer {
     for (var y = minY; y <= maxY; y++) {
       var ranges = <HorizontalRange>[];
       VerticalEdge? startingEdge;
+
       for (var edge in edges) {
-        if (y >= edge.minY && y <= edge.maxY) {
+        var minY = edge.minY;
+        var maxY = edge.maxY;
+        if (startingEdge != null) {
+          if (y == startingEdge.minY) {
+            maxY--;
+          }
+          if (y == startingEdge.maxY) {
+            minY++;
+          }
+        }
+
+        if (y >= minY && y <= maxY) {
           if (startingEdge == null) {
             startingEdge = edge;
           } else {
@@ -210,6 +222,9 @@ class TheaterRectangle {
   int get minY => min(tileA.y, tileB.y);
   int get maxX => max(tileA.x, tileB.x);
   int get maxY => max(tileA.y, tileB.y);
+
+  @override
+  String toString() => "{tileA: $tileA, tileB: $tileB, area: $area}";
 }
 
 typedef VerticalEdge = ({int x, int minY, int maxY});
