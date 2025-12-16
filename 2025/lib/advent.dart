@@ -1,6 +1,11 @@
 import 'package:advent/day_registry.g.dart';
 
-String getResultForDay(int day) {
+Future<String> getResultForDay(int day) async {
   var runners = dayRunners[day] ?? [];
-  return runners.map((runner) => runner.run()).join();
+  var result = "";
+  for (var r in runners) {
+    result += await r.run();
+  }
+
+  return result;
 }

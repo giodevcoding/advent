@@ -1,3 +1,5 @@
+const alphabet = "abcdefghijklmnopqrstuvwxyz";
+
 List<String> chunk(String str, int chunkSize) {
   var result = <String>[];
   for (var i = 0; i < str.length; i += chunkSize) {

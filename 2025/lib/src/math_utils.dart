@@ -27,3 +27,5 @@ List<int> divisors(int x) {
 
 const int maxInt =  0x7FFFFFFFFFFFFFFF;
 const int minInt = -0x8000000000000000;
+
+int sum(int a, int b) => a + b;
