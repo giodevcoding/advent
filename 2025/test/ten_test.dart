@@ -20,7 +20,7 @@ void main() {
     expect(result, 7);
   });
 
-  test('FactoryMachineController optimally powers on machines', () async {
+  test('FactoryMachineController optimally configure joltage for machines', () async {
     Debugger.enable();
     var result = await factoryMachineController.configureJoltages(testInput);
 
